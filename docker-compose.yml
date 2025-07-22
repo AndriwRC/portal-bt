@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres:16
+    container_name: db_${APP_NAME}
+    restart: always
+    ports:
+      - ${DB_PORT}:5432
+    env_file:
+      - .env
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - network
+
+  api:
+    build: .
+    container_name: api_${APP_NAME}
+    restart: always
+    env_file: .env
+    volumes:
+      - ./app:/usr/src/app
+    ports:
+      - "${APP_PORT}:8000"
+    networks:
+      - network
+    depends_on:
+      - db
+
+networks:
+  network:
+    name: ${APP_NAME}_network
+    driver: bridge
+
+volumes:
+  postgres-data:
