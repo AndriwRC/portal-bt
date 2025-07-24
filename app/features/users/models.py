@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 from sqlmodel import Field, Relationship, SQLModel
 
@@ -50,5 +51,8 @@ class User(SQLModel, table=True):
     phone: Optional[str]
     email: str
     password: str
+    created_at: datetime = Field(default_factory=datetime.now, nullable=False)
+    updated_at: datetime = Field(default_factory=datetime.now, nullable=False)
+    deleted_at: Optional[datetime] = Field(default=None, nullable=True)
 
     roles: list[Role] = Relationship(link_model=UserRoleLink)
