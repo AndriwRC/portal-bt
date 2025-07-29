@@ -3,6 +3,10 @@ from contextlib import asynccontextmanager
 
 from .database.core import init_db
 from .api import register_routes
+from .features.hours import models
+from .features.visits import models
+from .features.schools import models
+from .features.parameters import models
 
 
 @asynccontextmanager
