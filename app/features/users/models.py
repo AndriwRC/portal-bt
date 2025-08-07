@@ -1,6 +1,8 @@
 from datetime import datetime
 from typing import Optional
 from sqlmodel import Field, Relationship, SQLModel
+from ..hours import Hour
+from ..visits import Visit, UserVisitLink
 
 
 class RolePermissionLink(SQLModel, table=True):
@@ -56,3 +58,9 @@ class User(SQLModel, table=True):
     deleted_at: Optional[datetime] = Field(default=None, nullable=True)
 
     roles: list[Role] = Relationship(link_model=UserRoleLink)
+    #An user can register multiples hour
+    hours: list["Hour"] = Relationship(back_populates="hours")
+    #An user can be responsable of multiples visits
+    responsible_visits: list["Visit"] = Relationship(back_populates="responsible")
+    #An user can participate on multiple visits
+    visits: list["Visit"] = Relationship(back_populates="users", link_model="UserVisitLink")

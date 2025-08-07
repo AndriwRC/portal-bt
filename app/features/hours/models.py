@@ -1,6 +1,8 @@
 from datetime import date, time
 from typing import Optional
 from sqlmodel import Field, Relationship, SQLModel
+from ..users import User
+from ..parameters import Parameter
 
 
 class Hour(SQLModel, table=True):
@@ -18,3 +20,8 @@ class Hour(SQLModel, table=True):
     activity_type: Optional[int] = Field(
         default=None, foreign_key="parameter_values.id"
     )
+
+    # An hour is register by one user
+    user: Optional["User"] = Relationship(back_populates="hours")
+    # Only one activity is register on an hour
+    activity_type: Optional["Parameter"] = Relationship(back_populates="hours")
