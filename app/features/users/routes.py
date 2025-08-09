@@ -1,9 +1,10 @@
 from typing import List
 from fastapi import APIRouter, Depends, Response
 
-from app.core.models import APIResponse
+from app.core.schemas.http import HTTPResponseModel
 from app.database.core import get_session
 
+from .schemas import UserPublic
 from .queries import UserQueries
 from .services import UserService
 
@@ -19,6 +20,9 @@ def get_user_service(queries=Depends(get_user_queries)):
 router = APIRouter(prefix="/users")
 
 
-@router.get("/", response_model=APIResponse[List])
+@router.get("/", response_model=HTTPResponseModel[List[UserPublic]])
 def get_users(response: Response, service: UserService = Depends(get_user_service)):
-    return service.get_all(response)
+    result = service.get_all()
+    response.status_code = result.status_code
+
+    return result

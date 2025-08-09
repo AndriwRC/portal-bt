@@ -1,9 +1,11 @@
-from pydantic import BaseModel
+from fastapi import status
 from sqlmodel import Session, SQLModel, select
 from typing import Type, TypeVar, Generic, Optional, List
 
+from .constants import CRUDMessages
+from .schemas.http import HTTPResponseModel
+
 ModelType = TypeVar("ModelType", bound=SQLModel)
-ResponseType = TypeVar("ResponseType")
 
 
 class BaseQuery(Generic[ModelType]):
@@ -23,8 +25,12 @@ class BaseService:
     def __init__(self, queries: BaseQuery):
         self.queries = queries
 
+    def get_all(self) -> HTTPResponseModel:
+        # Business logic, permissions, exceptions
+        data = self.queries.get_all()
 
-class APIResponse(BaseModel, Generic[ResponseType]):
-    message: str
-    data: Optional[ResponseType] = None
-    errors: Optional[dict] = None
+        return HTTPResponseModel(
+            status_code=status.HTTP_200_OK,
+            message=CRUDMessages.LIST_SUCCESS if data else CRUDMessages.LIST_EMPTY,
+            data=data,
+        )
