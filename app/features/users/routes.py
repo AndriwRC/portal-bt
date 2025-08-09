@@ -26,3 +26,13 @@ def get_users(response: Response, service: UserService = Depends(get_user_servic
     response.status_code = result.status_code
 
     return result
+
+
+@router.get("/{user_id}", response_model=HTTPResponseModel[UserPublic])
+def get_user(
+    user_id: int, response: Response, service: UserService = Depends(get_user_service)
+):
+    result = service.get_by_id(user_id)
+    response.status_code = result.status_code
+
+    return result

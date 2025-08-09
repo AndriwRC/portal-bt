@@ -34,3 +34,19 @@ class BaseService:
             message=CRUDMessages.LIST_SUCCESS if data else CRUDMessages.LIST_EMPTY,
             data=data,
         )
+
+    def get_by_id(self, id: int) -> HTTPResponseModel:
+        data = self.queries.get_by_id(id)
+
+        if data:
+            return HTTPResponseModel(
+                status_code=status.HTTP_200_OK,
+                message=CRUDMessages.GET_SUCCESS,
+                data=data,
+            )
+
+        return HTTPResponseModel(
+            status_code=status.HTTP_404_NOT_FOUND,
+            message=CRUDMessages.GET_NOT_FOUND,
+            data=data,
+        )
