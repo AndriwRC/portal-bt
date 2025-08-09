@@ -61,3 +61,13 @@ def update_user(
     response.status_code = result.status_code
 
     return result
+
+
+@router.delete("/{user_id}", response_model=HTTPResponseModel[UserPublic])
+def delete_user(
+    user_id: int, response: Response, service: UserService = Depends(get_user_service)
+):
+    result = service.delete(user_id)
+    response.status_code = result.status_code
+
+    return result

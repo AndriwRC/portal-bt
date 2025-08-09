@@ -38,6 +38,12 @@ class BaseQuery(Generic[ModelType, CreateModelType, UpdateModelType]):
 
         return record
 
+    def delete(self, record: ModelType) -> ModelType:
+        self.db.delete(record)
+        self.db.commit()
+
+        return record
+
 
 class BaseService(Generic[ModelType, CreateModelType, UpdateModelType]):
     def __init__(self, queries: BaseQuery, model: Type[ModelType]):
@@ -101,5 +107,24 @@ class BaseService(Generic[ModelType, CreateModelType, UpdateModelType]):
 
         return HTTPResponseModel(
             status_code=status.HTTP_404_NOT_FOUND,
-            message=CRUDMessages.GET_NOT_FOUND,
+            message=CRUDMessages.UPDATE_FAILED,
+            errors=[{"detail": CRUDMessages.GET_NOT_FOUND}],
+        )
+
+    def delete(self, id: int):
+        record = self.queries.get_by_id(id)
+
+        if record:
+            deleted = self.queries.delete(record)
+
+            return HTTPResponseModel(
+                status_code=status.HTTP_200_OK,
+                message=CRUDMessages.DELETE_SUCCESS,
+                data=deleted,
+            )
+
+        return HTTPResponseModel(
+            status_code=status.HTTP_404_NOT_FOUND,
+            message=CRUDMessages.DELETE_FAILED,
+            errors=[{"detail": CRUDMessages.GET_NOT_FOUND}],
         )
