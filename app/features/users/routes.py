@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, Response
 from app.core.schemas.http import HTTPResponseModel
 from app.database.core import get_session
 
-from .schemas import UserPublic
+from .schemas import UserCreate, UserPublic
 from .queries import UserQueries
 from .services import UserService
 
@@ -33,6 +33,18 @@ def get_user(
     user_id: int, response: Response, service: UserService = Depends(get_user_service)
 ):
     result = service.get_by_id(user_id)
+    response.status_code = result.status_code
+
+    return result
+
+
+@router.post("/", response_model=HTTPResponseModel[UserPublic])
+def create_user(
+    user: UserCreate,
+    response: Response,
+    service: UserService = Depends(get_user_service),
+):
+    result = service.create(user)
     response.status_code = result.status_code
 
     return result

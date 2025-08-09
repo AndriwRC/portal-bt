@@ -9,4 +9,4 @@ class HTTPResponseModel(BaseModel, Generic[ResponseType]):
     status_code: int
     message: str
     data: Optional[ResponseType] = None
-    errors: Optional[List[dict]] = None
+    errors: Optional[List] = None

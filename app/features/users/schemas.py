@@ -13,3 +13,7 @@ class UserBase(SQLModel):
 class UserPublic(UserBase):
     id: int
     password: SecretStr
+
+
+class UserCreate(UserBase):
+    pass

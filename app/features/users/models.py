@@ -49,6 +49,7 @@ class User(UserBase, table=True):
     __tablename__ = "users"
 
     id: Optional[int] = Field(default=None, primary_key=True)
+    email: str = Field(unique=True)
     created_at: Optional[datetime] = Field(default_factory=datetime.now, nullable=True)
     updated_at: Optional[datetime] = Field(default_factory=datetime.now, nullable=True)
     deleted_at: Optional[datetime] = Field(default=None, nullable=True)
