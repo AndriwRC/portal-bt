@@ -8,9 +8,10 @@ from .schemas.http import HTTPResponseModel
 
 ModelType = TypeVar("ModelType", bound=SQLModel)
 CreateModelType = TypeVar("CreateModelType", bound=SQLModel)
+UpdateModelType = TypeVar("UpdateModelType", bound=SQLModel)
 
 
-class BaseQuery(Generic[ModelType, CreateModelType]):
+class BaseQuery(Generic[ModelType, CreateModelType, UpdateModelType]):
     def __init__(self, db: Session, model: Type[ModelType]):
         self.db = db
         self.model = model
@@ -29,8 +30,16 @@ class BaseQuery(Generic[ModelType, CreateModelType]):
 
         return data
 
+    def update(self, record: ModelType, data: UpdateModelType) -> ModelType:
+        record.sqlmodel_update(data)
+        self.db.add(record)
+        self.db.commit()
+        self.db.refresh(record)
 
-class BaseService(Generic[ModelType, CreateModelType]):
+        return record
+
+
+class BaseService(Generic[ModelType, CreateModelType, UpdateModelType]):
     def __init__(self, queries: BaseQuery, model: Type[ModelType]):
         self.queries = queries
         self.model = model
@@ -77,3 +86,20 @@ class BaseService(Generic[ModelType, CreateModelType]):
                 message=CRUDMessages.CREATE_FAILED,
                 errors=[{"detail": str(ex.orig)}],
             )
+
+    def update(self, id: int, data: UpdateModelType):
+        record = self.queries.get_by_id(id)
+
+        if record:
+            new_data = data.model_dump(exclude_unset=True)
+            updated = self.queries.update(record, new_data)
+            return HTTPResponseModel(
+                status_code=status.HTTP_200_OK,
+                message=CRUDMessages.UPDATE_SUCCESS,
+                data=updated,
+            )
+
+        return HTTPResponseModel(
+            status_code=status.HTTP_404_NOT_FOUND,
+            message=CRUDMessages.GET_NOT_FOUND,
+        )

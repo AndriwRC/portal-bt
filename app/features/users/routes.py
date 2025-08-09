@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, Response
 from app.core.schemas.http import HTTPResponseModel
 from app.database.core import get_session
 
-from .schemas import UserCreate, UserPublic
+from .schemas import UserCreate, UserPublic, UserUpdate
 from .queries import UserQueries
 from .services import UserService
 
@@ -45,6 +45,19 @@ def create_user(
     service: UserService = Depends(get_user_service),
 ):
     result = service.create(user)
+    response.status_code = result.status_code
+
+    return result
+
+
+@router.patch("/{user_id}", response_model=HTTPResponseModel[UserPublic])
+def update_user(
+    user_id: int,
+    data: UserUpdate,
+    response: Response,
+    service: UserService = Depends(get_user_service),
+):
+    result = service.update(user_id, data)
     response.status_code = result.status_code
 
     return result

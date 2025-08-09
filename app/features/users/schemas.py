@@ -5,7 +5,7 @@ from sqlmodel import SQLModel
 
 class UserBase(SQLModel):
     name: str
-    phone: Optional[str]
+    phone: Optional[str] = None
     email: EmailStr
     password: str
 
@@ -17,3 +17,8 @@ class UserPublic(UserBase):
 
 class UserCreate(UserBase):
     pass
+
+
+class UserUpdate(SQLModel):
+    name: Optional[str] = None
+    phone: Optional[str] = None
