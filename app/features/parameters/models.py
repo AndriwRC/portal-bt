@@ -1,7 +1,10 @@
-from datetime import datetime
-from typing import Optional
+from __future__ import annotations
+from typing import Optional, TYPE_CHECKING
 from sqlmodel import Field, Relationship, SQLModel
-from ..hours import Hour
+
+
+if TYPE_CHECKING:
+    from ..hours import Hour
 
 
 class Parameter(SQLModel, table=True):
@@ -10,6 +13,7 @@ class Parameter(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     description: str
     ref: str
+
     # I dude on this
     parameterValues: list["ParameterValue"] = Relationship(back_populates="parameter")
 
