@@ -7,6 +7,7 @@ if TYPE_CHECKING:
     from ..hours import Hour
     from ..visits import Visit
     from ..links import UserVisitLink
+from .schemas import UserBase
 
 
 class RolePermissionLink(SQLModel, table=True):
@@ -49,16 +50,13 @@ class UserRoleLink(SQLModel, table=True):
     )
 
 
-class User(SQLModel, table=True):
+class User(UserBase, table=True):
     __tablename__ = "users"
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    name: str
-    phone: Optional[str]
-    email: str
-    password: str
-    created_at: datetime = Field(default_factory=datetime.now, nullable=False)
-    updated_at: datetime = Field(default_factory=datetime.now, nullable=False)
+    email: str = Field(unique=True)
+    created_at: Optional[datetime] = Field(default_factory=datetime.now, nullable=True)
+    updated_at: Optional[datetime] = Field(default_factory=datetime.now, nullable=True)
     deleted_at: Optional[datetime] = Field(default=None, nullable=True)
 
     roles: list[Role] = Relationship(link_model=UserRoleLink)
