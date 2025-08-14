@@ -1,13 +1,12 @@
 from __future__ import annotations
 from typing import Optional, TYPE_CHECKING
 from sqlmodel import Field, Relationship, SQLModel
-
+from ..links.models import UserVisitLink
 
 if TYPE_CHECKING:
     from ..users import User
     from ..schools import School
     from ..hours import Hour
-    from ..links import UserVisitLink
 
 
 class Visit(SQLModel, table=True):

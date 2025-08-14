@@ -3,11 +3,11 @@ from datetime import datetime
 from typing import Optional, TYPE_CHECKING
 from sqlmodel import Field, Relationship, SQLModel
 from .schemas import UserBase
+from ..links.models import UserVisitLink
 
 if TYPE_CHECKING:
     from ..hours import Hour
     from ..visits import Visit
-    from ..links import UserVisitLink
 
 
 class RolePermissionLink(SQLModel, table=True):
