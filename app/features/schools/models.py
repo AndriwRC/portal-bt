@@ -1,10 +1,9 @@
-from __future__ import annotations
 from typing import Optional, TYPE_CHECKING
 from sqlmodel import Field, Relationship, SQLModel
 
 
 if TYPE_CHECKING:
-    from ..visits import Visit
+    from ..visits.models import Visit
 
 
 class School(SQLModel, table=True):

@@ -1,10 +1,9 @@
-from __future__ import annotations
 from typing import Optional, TYPE_CHECKING
 from sqlmodel import Field, Relationship, SQLModel
 
 
 if TYPE_CHECKING:
-    from ..hours import Hour
+    from ..hours.models import Hour
 
 
 class Parameter(SQLModel, table=True):

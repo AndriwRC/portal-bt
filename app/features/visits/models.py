@@ -1,12 +1,21 @@
-from __future__ import annotations
 from typing import Optional, TYPE_CHECKING
 from sqlmodel import Field, Relationship, SQLModel
-from ..links.models import UserVisitLink
+
 
 if TYPE_CHECKING:
-    from ..users import User
-    from ..schools import School
-    from ..hours import Hour
+    from ..users.models import User
+    from ..schools.models import School
+    from ..hours.models import Hour
+
+
+class UserVisitLink(SQLModel, table=True):
+    __tablename__ = "user_visit_link"
+    user_id: Optional[int] = Field(
+        default=None, foreign_key="users.id", primary_key=True
+    )
+    visit_id: Optional[int] = Field(
+        default=None, foreign_key="visits.id", primary_key=True
+    )
 
 
 class Visit(SQLModel, table=True):
@@ -17,7 +26,7 @@ class Visit(SQLModel, table=True):
 
     school_id: Optional[int] = Field(default=None, foreign_key="schools.id")
     responsible_id: Optional[int] = Field(default=None, foreign_key="users.id")
-    hour_id: Optional[int] = Field(default=None, foreign_key="hours.id")
+    # hour_id: Optional[int] = Field(default=None, foreign_key="hours.id")
 
     # Each visit have one responsable
     responsible: Optional["User"] = Relationship(back_populates="responsible_visits")

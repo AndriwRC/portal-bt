@@ -17,7 +17,7 @@ def get_user_service(queries=Depends(get_user_queries)):
     return UserService(queries)
 
 
-router = APIRouter(prefix="/users")
+router = APIRouter(prefix="/users", tags=["users"])
 
 
 @router.get("/", response_model=HTTPResponseModel[List[UserPublic]])

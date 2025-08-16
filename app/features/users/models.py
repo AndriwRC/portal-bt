@@ -1,13 +1,13 @@
-from __future__ import annotations
 from datetime import datetime
 from typing import Optional, TYPE_CHECKING
 from sqlmodel import Field, Relationship, SQLModel
+
 from .schemas import UserBase
-from ..links.models import UserVisitLink
+from ..visits.models import UserVisitLink
 
 if TYPE_CHECKING:
-    from ..hours import Hour
-    from ..visits import Visit
+    from ..hours.models import Hour
+    from ..visits.models import Visit
 
 
 class RolePermissionLink(SQLModel, table=True):

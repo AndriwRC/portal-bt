@@ -1,13 +1,12 @@
-from __future__ import annotations
 from datetime import date, time
 from typing import Optional, TYPE_CHECKING
 from sqlmodel import Field, Relationship, SQLModel
 
 
 if TYPE_CHECKING:
-    from ..users import User
-    from ..parameters import ParameterValue
-    from ..visits import Visit
+    from ..users.models import User
+    from ..parameters.models import ParameterValue
+    from ..visits.models import Visit
 
 
 class Hour(SQLModel, table=True):
