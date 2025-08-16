@@ -11,6 +11,7 @@ if TYPE_CHECKING:
 
 
 class RolePermissionLink(SQLModel, table=True):
+    __tablename__ = "role_permission_link"
     role_id: Optional[int] = Field(
         default=None, foreign_key="roles.id", primary_key=True
     )
@@ -42,6 +43,8 @@ class Permission(SQLModel, table=True):
 
 
 class UserRoleLink(SQLModel, table=True):
+    __tablename__ = "user_role_link"
+
     user_id: Optional[int] = Field(
         default=None, foreign_key="users.id", primary_key=True
     )
