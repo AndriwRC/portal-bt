@@ -14,7 +14,7 @@ class Parameter(SQLModel, table=True):
     ref: str
 
     # I dude on this
-    parameterValues: list["ParameterValue"] = Relationship(back_populates="parameter")
+    values: list["ParameterValue"] = Relationship(back_populates="parameter")
 
 
 class ParameterValue(SQLModel, table=True):
@@ -25,6 +25,6 @@ class ParameterValue(SQLModel, table=True):
     parameter_id: Optional[int] = Field(default=None, foreign_key="parameters.id")
 
     #
-    parameter: Optional["Parameter"] = Relationship(back_populates="parameterValues")
-    # Multuple hours can have the same parameter value
+    parameter: Optional["Parameter"] = Relationship(back_populates="values")
+    # Multiple hours can have the same parameter value
     hours: list["Hour"] = Relationship(back_populates="activity_type")
