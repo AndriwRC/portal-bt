@@ -1,11 +1,17 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 from sqlmodel import Field, Relationship, SQLModel
 
 from .schemas import UserBase
+from ..visits.models import UserVisitLink
+
+if TYPE_CHECKING:
+    from ..hours.models import Hour
+    from ..visits.models import Visit
 
 
 class RolePermissionLink(SQLModel, table=True):
+    __tablename__ = "role_permission_link"
     role_id: Optional[int] = Field(
         default=None, foreign_key="roles.id", primary_key=True
     )
@@ -37,6 +43,8 @@ class Permission(SQLModel, table=True):
 
 
 class UserRoleLink(SQLModel, table=True):
+    __tablename__ = "user_role_link"
+
     user_id: Optional[int] = Field(
         default=None, foreign_key="users.id", primary_key=True
     )
@@ -55,3 +63,11 @@ class User(UserBase, table=True):
     deleted_at: Optional[datetime] = Field(default=None, nullable=True)
 
     roles: list[Role] = Relationship(link_model=UserRoleLink)
+    # An user can register multiples hour
+    hours: list["Hour"] = Relationship(back_populates="user")
+    # An user can be responsable of multiples visits
+    responsible_visits: list["Visit"] = Relationship(back_populates="responsible")
+    # An user can participate on multiple visits
+    visits: list["Visit"] = Relationship(
+        back_populates="users", link_model=UserVisitLink
+    )

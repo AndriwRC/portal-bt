@@ -1,6 +1,12 @@
 from datetime import date, time
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 from sqlmodel import Field, Relationship, SQLModel
+
+
+if TYPE_CHECKING:
+    from ..users.models import User
+    from ..parameters.models import ParameterValue
+    from ..visits.models import Visit
 
 
 class Hour(SQLModel, table=True):
@@ -15,6 +21,14 @@ class Hour(SQLModel, table=True):
 
     user_id: Optional[int] = Field(default=None, foreign_key="users.id")
     visit_id: Optional[int] = Field(default=None, foreign_key="visits.id")
-    activity_type: Optional[int] = Field(
+    activity_type_id: Optional[int] = Field(
         default=None, foreign_key="parameter_values.id"
     )
+
+    # An hour is register by one user
+    user: Optional["User"] = Relationship(back_populates="hours")
+
+    visit: Optional["Visit"] = Relationship(back_populates="hours")
+
+    # Only one activity is register on an hour
+    activity_type: Optional["ParameterValue"] = Relationship(back_populates="hours")
