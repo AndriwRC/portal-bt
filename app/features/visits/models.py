@@ -1,3 +1,4 @@
+from datetime import date, time
 from typing import Optional, TYPE_CHECKING
 from sqlmodel import Field, Relationship, SQLModel
 
@@ -23,10 +24,12 @@ class Visit(SQLModel, table=True):
 
     id: Optional[int] = Field(default=None, primary_key=True)
     equipment: str
+    date: date
+    time_start: time
+    time_end: time
 
     school_id: Optional[int] = Field(default=None, foreign_key="schools.id")
     responsible_id: Optional[int] = Field(default=None, foreign_key="users.id")
-    # hour_id: Optional[int] = Field(default=None, foreign_key="hours.id")
 
     # Each visit have one responsable
     responsible: Optional["User"] = Relationship(back_populates="responsible_visits")
