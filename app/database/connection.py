@@ -1,5 +1,5 @@
 from sqlmodel import create_engine
-from ..config.settings import Settings
+from ..core.settings import Settings
 
 
 class Connection:
