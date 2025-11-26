@@ -63,11 +63,8 @@ class User(UserBase, table=True):
     deleted_at: Optional[datetime] = Field(default=None, nullable=True)
 
     roles: list[Role] = Relationship(link_model=UserRoleLink)
-    # An user can register multiples hour
     hours: list["Hour"] = Relationship(back_populates="user")
-    # An user can be responsable of multiples visits
-    responsible_visits: list["Visit"] = Relationship(back_populates="responsible")
-    # An user can participate on multiple visits
-    visits: list["Visit"] = Relationship(
-        back_populates="users", link_model=UserVisitLink
+    scheduled_visits: list["Visit"] = Relationship(back_populates="responsible")
+    attended_visits: list["Visit"] = Relationship(
+        back_populates="assignees", link_model=UserVisitLink
     )

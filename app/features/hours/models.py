@@ -6,7 +6,6 @@ from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
     from ..users.models import User
-    from ..visits.models import Visit
 
 
 class HourState(str, Enum):
@@ -31,7 +30,5 @@ class Hour(SQLModel, table=True):
     activity_type: ActivityType = Field(default=ActivityType.VISIT)
     state: HourState = Field(default=HourState.PENDING)
     user_id: Optional[int] = Field(default=None, foreign_key="users.id")
-    visit_id: Optional[int] = Field(default=None, foreign_key="visits.id")
 
     user: Optional["User"] = Relationship(back_populates="hours")
-    visit: Optional["Visit"] = Relationship(back_populates="hours")

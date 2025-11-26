@@ -15,5 +15,4 @@ class School(SQLModel, table=True):
     address: str
     in_charge: str
 
-    # A school can be visited more than once
-    visits: list["Visit"] = Relationship(back_populates="schools")
+    visits: list["Visit"] = Relationship(back_populates="school")

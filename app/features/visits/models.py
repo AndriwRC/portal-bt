@@ -6,7 +6,6 @@ from sqlmodel import Field, Relationship, SQLModel
 if TYPE_CHECKING:
     from ..users.models import User
     from ..schools.models import School
-    from ..hours.models import Hour
 
 
 class UserVisitLink(SQLModel, table=True):
@@ -31,13 +30,8 @@ class Visit(SQLModel, table=True):
     school_id: Optional[int] = Field(default=None, foreign_key="schools.id")
     responsible_id: Optional[int] = Field(default=None, foreign_key="users.id")
 
-    # Each visit have one responsable
-    responsible: Optional["User"] = Relationship(back_populates="responsible_visits")
-    # The visit is realice only on one school
-    schools: Optional["School"] = Relationship(back_populates="visits")
-    # Multiple user can realize a visit
-    users: list["User"] = Relationship(
-        back_populates="visits", link_model=UserVisitLink
+    school: Optional["School"] = Relationship(back_populates="visits")
+    responsible: Optional["User"] = Relationship(back_populates="scheduled_visits")
+    assignees: list["User"] = Relationship(
+        back_populates="attended_visits", link_model=UserVisitLink
     )
-    # Register hours to this visit
-    hours: list["Hour"] = Relationship(back_populates="visit")
