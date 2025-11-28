@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 
 from .api import register_routes
 from .database.core import init_db, Connection
-from .database.seeders.startup import sync_permissions
+from .database.seeders.startup import sync_permissions, sync_roles
 
 from .features.hours import models
 from .features.visits import models
@@ -17,6 +17,7 @@ async def create_db(app: FastAPI):
     init_db()
     with Session(Connection.ENGINE) as session:
         sync_permissions(session)
+        sync_roles(session)
 
     yield
 

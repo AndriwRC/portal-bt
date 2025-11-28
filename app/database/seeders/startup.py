@@ -1,6 +1,6 @@
 from sqlmodel import select, Session
 
-from app.features.users.models import Permission
+from app.features.users.models import Permission, Role
 from app.features.users.permissions import PERMISSION_METADATA
 
 
@@ -31,3 +31,21 @@ def sync_permissions(db: Session):
 
     db.commit()
 
+
+def sync_roles(db: Session):
+    admin = db.exec(select(Role).where(Role.name == "admin")).first()
+
+    if not admin:
+        admin = Role(name="admin", is_protected=True)
+        db.add(admin)
+
+    db.commit()
+    db.refresh(admin)
+
+    permissions = db.exec(select(Permission)).all()
+
+    for permission in permissions:
+        if permission not in admin.permissions:
+            admin.permissions.append(permission)
+
+    db.commit()
