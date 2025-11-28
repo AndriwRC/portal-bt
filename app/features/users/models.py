@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
 from sqlmodel import Field, Relationship, SQLModel
 
 from .permissions import PermissionEnum
@@ -12,10 +12,8 @@ if TYPE_CHECKING:
 
 class RolePermissionLink(SQLModel, table=True):
     __tablename__ = "role_permission_link"
-    role_id: Optional[int] = Field(
-        default=None, foreign_key="roles.id", primary_key=True
-    )
-    permission_id: Optional[int] = Field(
+    role_id: int | None = Field(default=None, foreign_key="roles.id", primary_key=True)
+    permission_id: int | None = Field(
         default=None, foreign_key="permissions.id", primary_key=True
     )
 
@@ -23,11 +21,11 @@ class RolePermissionLink(SQLModel, table=True):
 class Permission(SQLModel, table=True):
     __tablename__ = "permissions"
 
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
     name: PermissionEnum = Field(unique=True)
     label: str
     module: str
-    description: Optional[str] = None
+    description: str | None = None
 
     roles: list["Role"] = Relationship(
         back_populates="permissions", link_model=RolePermissionLink
@@ -37,7 +35,7 @@ class Permission(SQLModel, table=True):
 class Role(SQLModel, table=True):
     __tablename__ = "roles"
 
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
     name: str = Field(unique=True)
     is_protected: bool = Field(default=False)
 
@@ -50,17 +48,17 @@ class Role(SQLModel, table=True):
 class User(SQLModel, table=True):
     __tablename__ = "users"
 
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
     name: str
     email: str = Field(unique=True)
     password: str
-    phone: Optional[str] = None
-    role_id: Optional[int] = Field(default=None, foreign_key="roles.id")
-    created_at: Optional[datetime] = Field(default_factory=datetime.now, nullable=True)
-    updated_at: Optional[datetime] = Field(default_factory=datetime.now, nullable=True)
-    deleted_at: Optional[datetime] = Field(default=None, nullable=True)
+    phone: str | None = None
+    role_id: int | None = Field(default=None, foreign_key="roles.id")
+    created_at: datetime | None = Field(default_factory=datetime.now, nullable=True)
+    updated_at: datetime | None = Field(default_factory=datetime.now, nullable=True)
+    deleted_at: datetime | None = Field(default=None, nullable=True)
 
-    role: Optional[Role] = Relationship(back_populates="users")
+    role: Role | None = Relationship(back_populates="users")
     hours: list["Hour"] = Relationship(back_populates="user")
     scheduled_visits: list["Visit"] = Relationship(back_populates="responsible")
     attended_visits: list["Visit"] = Relationship(

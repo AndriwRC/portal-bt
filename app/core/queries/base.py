@@ -1,5 +1,5 @@
 from sqlmodel import Session, select
-from typing import Type, Generic, Optional, List
+from typing import Type, Generic
 
 from ..types import ModelType
 
@@ -9,11 +9,11 @@ class BaseQuery(Generic[ModelType]):
         self.db = db
         self.model = model
 
-    def get_all(self) -> List[ModelType]:
+    def get_all(self) -> list[ModelType]:
         statement = select(self.model)
         return self.db.exec(statement).all()
 
-    def get_by_id(self, id: int) -> Optional[ModelType]:
+    def get_by_id(self, id: int) -> ModelType | None:
         return self.db.get(self.model, id)
 
 

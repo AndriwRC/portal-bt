@@ -1,6 +1,6 @@
 from datetime import date, time
 from enum import Enum
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 from sqlmodel import Field, Relationship, SQLModel
 
 
@@ -22,13 +22,13 @@ class ActivityType(str, Enum):
 class Hour(SQLModel, table=True):
     __tablename__ = "hours"
 
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
     date: date
     time_in: time
     time_out: time
-    evidence: Optional[str] = Field(default=None, description="file path")
+    evidence: str | None = Field(default=None, description="file path")
     activity_type: ActivityType = Field(default=ActivityType.VISIT)
     state: HourState = Field(default=HourState.PENDING)
-    user_id: Optional[int] = Field(default=None, foreign_key="users.id")
+    user_id: int | None = Field(default=None, foreign_key="users.id")
 
     user: Optional["User"] = Relationship(back_populates="hours")

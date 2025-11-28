@@ -10,14 +10,14 @@ class UserBase(SQLModel):
 
 class UserCreate(UserBase):
     password: str
-    phone: Optional[str] = None
-    role_id: Optional[int] = None
+    phone: str | None = None
+    role_id: int | None = None
 
 
 class UserUpdate(SQLModel):
-    name: Optional[str] = None
-    phone: Optional[str] = None
-    role_id: Optional[int] = None
+    name: str | None = None
+    phone: str | None = None
+    role_id: int | None = None
 
 
 class UserRead(UserBase):
@@ -30,7 +30,7 @@ class UserReadMin(UserBase):
 
 
 class UserReadDetailed(UserRead):
-    phone: Optional[str] = None
+    phone: str | None = None
     role: Optional["RoleDetailed"] = None
 
 
@@ -46,4 +46,4 @@ class PermissionBase(SQLModel):
     name: str
     label: str
     module: str
-    description: Optional[str] = None
+    description: str | None = None

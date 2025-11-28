@@ -15,7 +15,7 @@ class ParameterType(str, Enum):
 class Parameter(SQLModel, table=True):
     __tablename__ = "parameters"
 
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
 
     # Unique internal reference
     key: str = Field(index=True, unique=True)
@@ -26,16 +26,16 @@ class Parameter(SQLModel, table=True):
 
     type: ParameterType = Field(default=ParameterType.TEXT)
     editable: bool = Field(default=True)
-    default_value: Optional[str] = None
+    default_value: str | None = None
     values: list["ParameterValue"] = Relationship(back_populates="parameter")
 
 
 class ParameterValue(SQLModel, table=True):
     __tablename__ = "parameter_values"
 
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
     value: str
-    parameter_id: Optional[int] = Field(
+    parameter_id: int | None = Field(
         default=None, foreign_key="parameters.id", index=True
     )
 

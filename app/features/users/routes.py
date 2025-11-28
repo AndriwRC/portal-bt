@@ -1,4 +1,3 @@
-from typing import List
 from fastapi import APIRouter, Depends, Response
 
 from app.core.schemas.http import HTTPResponseModel
@@ -20,7 +19,7 @@ def get_user_service(queries=Depends(get_user_queries)):
 router = APIRouter(prefix="/users", tags=["users"])
 
 
-@router.get("/", response_model=HTTPResponseModel[List[UserRead]])
+@router.get("/", response_model=HTTPResponseModel[list[UserRead]])
 def get_users(response: Response, service: UserService = Depends(get_user_service)):
     result = service.get_all()
     response.status_code = result.status_code
