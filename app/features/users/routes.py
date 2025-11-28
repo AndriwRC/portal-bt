@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, Response
 from app.core.schemas.http import HTTPResponseModel
 from app.database.core import get_session
 
-from .schemas import UserCreate, UserRead, UserReadDetailed, UserUpdate
+from .schemas import UserCreate, UserRead, UserReadDetailed, UserReadMin, UserUpdate
 from .queries import UserQueries
 from .services import UserService
 
@@ -38,7 +38,7 @@ def get_user(
     return result
 
 
-@router.post("/", response_model=HTTPResponseModel[UserRead])
+@router.post("/", response_model=HTTPResponseModel[UserReadDetailed])
 def create_user(
     user: UserCreate,
     response: Response,
@@ -50,7 +50,7 @@ def create_user(
     return result
 
 
-@router.patch("/{user_id}", response_model=HTTPResponseModel[UserRead])
+@router.patch("/{user_id}", response_model=HTTPResponseModel[UserReadDetailed])
 def update_user(
     user_id: int,
     data: UserUpdate,
@@ -63,7 +63,7 @@ def update_user(
     return result
 
 
-@router.delete("/{user_id}", response_model=HTTPResponseModel[UserRead])
+@router.delete("/{user_id}", response_model=HTTPResponseModel[UserReadMin])
 def delete_user(
     user_id: int, response: Response, service: UserService = Depends(get_user_service)
 ):

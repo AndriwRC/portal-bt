@@ -25,7 +25,12 @@ class UserRead(UserBase):
     role: Optional["RoleBase"] = None
 
 
+class UserReadMin(UserBase):
+    pass
+
+
 class UserReadDetailed(UserRead):
+    phone: Optional[str] = None
     role: Optional["RoleDetailed"] = None
 
 

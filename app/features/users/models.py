@@ -2,7 +2,6 @@ from datetime import datetime
 from typing import Optional, TYPE_CHECKING
 from sqlmodel import Field, Relationship, SQLModel
 
-from .schemas import UserBase
 from .permissions import PermissionEnum
 from ..visits.models import UserVisitLink
 
@@ -48,11 +47,14 @@ class Role(SQLModel, table=True):
     users: list["User"] = Relationship(back_populates="role")
 
 
-class User(UserBase, table=True):
+class User(SQLModel, table=True):
     __tablename__ = "users"
 
     id: Optional[int] = Field(default=None, primary_key=True)
+    name: str
     email: str = Field(unique=True)
+    password: str
+    phone: Optional[str] = None
     role_id: Optional[int] = Field(default=None, foreign_key="roles.id")
     created_at: Optional[datetime] = Field(default_factory=datetime.now, nullable=True)
     updated_at: Optional[datetime] = Field(default_factory=datetime.now, nullable=True)
