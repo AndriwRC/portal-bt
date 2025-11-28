@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, Response
 from app.core.schemas.http import HTTPResponseModel
 from app.database.core import get_session
 
-from .schemas import UserCreate, UserPublic, UserUpdate
+from .schemas import UserCreate, UserRead, UserReadDetailed, UserUpdate
 from .queries import UserQueries
 from .services import UserService
 
@@ -20,7 +20,7 @@ def get_user_service(queries=Depends(get_user_queries)):
 router = APIRouter(prefix="/users", tags=["users"])
 
 
-@router.get("/", response_model=HTTPResponseModel[List[UserPublic]])
+@router.get("/", response_model=HTTPResponseModel[List[UserRead]])
 def get_users(response: Response, service: UserService = Depends(get_user_service)):
     result = service.get_all()
     response.status_code = result.status_code
@@ -28,7 +28,7 @@ def get_users(response: Response, service: UserService = Depends(get_user_servic
     return result
 
 
-@router.get("/{user_id}", response_model=HTTPResponseModel[UserPublic])
+@router.get("/{user_id}", response_model=HTTPResponseModel[UserReadDetailed])
 def get_user(
     user_id: int, response: Response, service: UserService = Depends(get_user_service)
 ):
@@ -38,7 +38,7 @@ def get_user(
     return result
 
 
-@router.post("/", response_model=HTTPResponseModel[UserPublic])
+@router.post("/", response_model=HTTPResponseModel[UserRead])
 def create_user(
     user: UserCreate,
     response: Response,
@@ -50,7 +50,7 @@ def create_user(
     return result
 
 
-@router.patch("/{user_id}", response_model=HTTPResponseModel[UserPublic])
+@router.patch("/{user_id}", response_model=HTTPResponseModel[UserRead])
 def update_user(
     user_id: int,
     data: UserUpdate,
@@ -63,7 +63,7 @@ def update_user(
     return result
 
 
-@router.delete("/{user_id}", response_model=HTTPResponseModel[UserPublic])
+@router.delete("/{user_id}", response_model=HTTPResponseModel[UserRead])
 def delete_user(
     user_id: int, response: Response, service: UserService = Depends(get_user_service)
 ):

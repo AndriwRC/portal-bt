@@ -1,24 +1,44 @@
 from typing import Optional
-from pydantic import EmailStr, SecretStr
+from pydantic import EmailStr
 from sqlmodel import SQLModel
 
 
 class UserBase(SQLModel):
     name: str
-    phone: Optional[str] = None
     email: EmailStr
-    password: str
-
-
-class UserPublic(UserBase):
-    id: int
-    password: SecretStr
 
 
 class UserCreate(UserBase):
-    pass
+    password: str
+    phone: Optional[str] = None
+    role_id: Optional[int] = None
 
 
 class UserUpdate(SQLModel):
     name: Optional[str] = None
     phone: Optional[str] = None
+    role_id: Optional[int] = None
+
+
+class UserRead(UserBase):
+    id: int
+    role: Optional["RoleBase"] = None
+
+
+class UserReadDetailed(UserRead):
+    role: Optional["RoleDetailed"] = None
+
+
+class RoleBase(SQLModel):
+    name: str
+
+
+class RoleDetailed(RoleBase):
+    permissions: list["PermissionBase"] = []
+
+
+class PermissionBase(SQLModel):
+    name: str
+    label: str
+    module: str
+    description: Optional[str] = None

@@ -44,3 +44,20 @@ To stop the running containers:
 ```bash
 docker-compose down
 ```
+
+
+# **Guidelines for Schema Naming**
+
+Use these suffixes consistently:
+
+### **Suffixes**
+
+| Suffix         | Meaning                |
+| -------------- | ---------------------- |
+| `Base`         | Shared fields          |
+| `Create`       | Required input payload |
+| `Update`       | Partial input payload  |
+| `Read`         | Response model         |
+| `ReadMin`      | Lightweight response   |
+| `ReadDetailed` | Heavy response         |
+| `ReadWithX`    | Nested relationships   |
