@@ -39,7 +39,7 @@ class Role(SQLModel, table=True):
     __tablename__ = "roles"
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    name: str
+    name: str = Field(unique=True)
     is_protected: bool = Field(default=False)
 
     permissions: list[Permission] = Relationship(
