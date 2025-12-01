@@ -16,5 +16,4 @@ class UserQueries(
     UpdateQueryMixin[User],
     DeleteQueryMixin[User],
 ):
-    def __init__(self, db: Session):
-        super().__init__(db, User)
+    model = User

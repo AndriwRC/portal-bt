@@ -5,9 +5,10 @@ from ..types import ModelType
 
 
 class BaseQuery(Generic[ModelType]):
-    def __init__(self, db: Session, model: Type[ModelType]):
+    model: Type[ModelType]
+
+    def __init__(self, db: Session):
         self.db = db
-        self.model = model
 
     def get_all(self) -> list[ModelType]:
         statement = select(self.model)

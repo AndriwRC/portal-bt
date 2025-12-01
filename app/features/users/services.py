@@ -9,11 +9,9 @@ from .queries import UserQueries
 from .schemas import UserCreate, UserUpdate
 
 
-class UserService(BaseService[User], CreateServiceMixin[UserCreate]):
-    queries = UserQueries
-
-    def __init__(self, queries):
-        super().__init__(queries, User)
+class UserService(BaseService[User, UserQueries], CreateServiceMixin[UserCreate]):
+    model = User
+    query_class = UserQueries
 
     def update(self, id: int, data: UserUpdate):
         record = self.queries.get_by_id(id)
