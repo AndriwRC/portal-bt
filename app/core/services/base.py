@@ -1,15 +1,15 @@
-from fastapi import status
+from fastapi import HTTPException, status
 from sqlalchemy.exc import IntegrityError
 from sqlmodel import Session
 from typing import Type, Generic, TypeVar
 
-
 from ..constants import CRUDMessages
 from ..queries.base import BaseQuery
-from ..schemas.http import HTTPResponseModel
+from ..schemas.http import HTTPResponseModel, error_detail
 from ..types import ModelType, CreateModelType
 
 QueryType = TypeVar("QueryType", bound=BaseQuery)
+
 
 class BaseService(Generic[ModelType, QueryType]):
     model: Type[ModelType]
@@ -30,16 +30,15 @@ class BaseService(Generic[ModelType, QueryType]):
     def get_by_id(self, id: int) -> HTTPResponseModel:
         data = self.queries.get_by_id(id)
 
-        if data:
-            return HTTPResponseModel(
-                status_code=status.HTTP_200_OK,
-                message=CRUDMessages.GET_SUCCESS,
-                data=data,
+        if not data:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=error_detail(msg=CRUDMessages.GET_NOT_FOUND),
             )
 
         return HTTPResponseModel(
-            status_code=status.HTTP_404_NOT_FOUND,
-            message=CRUDMessages.GET_NOT_FOUND,
+            status_code=status.HTTP_200_OK,
+            message=CRUDMessages.GET_SUCCESS,
             data=data,
         )
 
@@ -57,8 +56,10 @@ class CreateServiceMixin(Generic[CreateModelType]):
             )
 
         except IntegrityError as ex:
-            return HTTPResponseModel(
+            raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                message=CRUDMessages.CREATE_FAILED,
-                errors=[{"detail": str(ex.orig)}],
+                detail=error_detail(
+                    msg=CRUDMessages.CREATE_FAILED,
+                    ctx=str(ex.args),
+                ),
             )
