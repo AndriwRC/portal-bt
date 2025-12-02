@@ -1,12 +1,8 @@
 from fastapi import Depends
-from sqlmodel import SQLModel, Session
+from sqlmodel import Session
 from typing import Annotated
 
-from .connection import Connection
-
-
-def init_db():
-    SQLModel.metadata.create_all(Connection.ENGINE)
+from app.database.connection import Connection
 
 
 def get_session():

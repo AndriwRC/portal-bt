@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, Response
 from typing import Annotated
 
+from app.core.dependencies.db import SessionDep
 from app.core.schemas.http import HTTPResponseModel
-from app.database.core import SessionDep
 
 from .schemas import UserCreate, UserRead, UserReadDetailed, UserReadMin, UserUpdate
 from .services import UserService

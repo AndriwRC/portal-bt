@@ -3,7 +3,7 @@ from sqlmodel import Session
 from contextlib import asynccontextmanager
 
 from .api import register_routes
-from .database.core import init_db, Connection
+from .database.connection import init_db, Connection
 from .database.seeders.startup import sync_permissions, sync_roles
 
 from .features.hours import models

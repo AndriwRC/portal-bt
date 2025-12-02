@@ -3,11 +3,11 @@ from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 from typing import Annotated
 
-from app.database.core import SessionDep
 from app.features.users.models import User
 from app.features.users.queries import UserQueries
 from app.utils.jwt import decode_access_token
 
+from ..dependencies.db import SessionDep
 from ..schemas.http import error_detail
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")

@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 from typing import Annotated
 
-from app.database.core import SessionDep
+from app.core.dependencies.db import SessionDep
 
 from .schemas import Token
 from .services import AuthService
