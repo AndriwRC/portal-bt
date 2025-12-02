@@ -12,4 +12,8 @@ class Settings(BaseSettings):
     DB_PORT: str
     DB_ECHO: bool = False
 
+    SECRET_KEY: str
+    ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+
 settings = Settings()
