@@ -3,6 +3,7 @@ from fastapi import HTTPException, status
 from app.core.constants import CRUDMessages
 from app.core.services.base import BaseService, CreateServiceMixin
 from app.core.schemas.http import HTTPResponseModel, error_detail
+from app.utils.hashing import get_password_hash
 
 from .models import User
 from .queries import UserQueries
@@ -12,6 +13,10 @@ from .schemas import UserCreate, UserUpdate
 class UserService(BaseService[User, UserQueries], CreateServiceMixin[UserCreate]):
     model = User
     query_class = UserQueries
+
+    def create(self, data: UserCreate):
+        data.password = get_password_hash(data.password)
+        return super().create(data)
 
     def update(self, id: int, data: UserUpdate):
         record = self.queries.get_by_id(id)
