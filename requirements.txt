@@ -1,6 +1,9 @@
 annotated-types==0.7.0
 anyio==4.9.0
+argon2-cffi==25.1.0
+argon2-cffi-bindings==25.1.0
 certifi==2025.7.14
+cffi==2.0.0
 click==8.2.1
 dnspython==2.7.0
 email_validator==2.2.0
@@ -18,9 +21,13 @@ markdown-it-py==3.0.0
 MarkupSafe==3.0.2
 mdurl==0.1.2
 psycopg2==2.9.10
+pwdlib==0.3.0
+pycparser==2.23
 pydantic==2.11.7
+pydantic-settings==2.11.0
 pydantic_core==2.33.2
 Pygments==2.19.2
+PyJWT==2.10.1
 python-dotenv==1.1.1
 python-multipart==0.0.20
 PyYAML==6.0.2

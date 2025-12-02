@@ -1,70 +1,67 @@
 from __future__ import annotations
 from datetime import datetime
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
 from sqlmodel import Field, Relationship, SQLModel
-from .schemas import UserBase
-from ..links.models import UserVisitLink
+
+from .permissions import PermissionEnum
+from ..visits.models import UserVisitLink
 
 if TYPE_CHECKING:
-    from ..hours import Hour
-    from ..visits import Visit
+    from ..hours.models import Hour
+    from ..visits.models import Visit
 
 
 class RolePermissionLink(SQLModel, table=True):
-    role_id: Optional[int] = Field(
-        default=None, foreign_key="roles.id", primary_key=True
-    )
-    permission_id: Optional[int] = Field(
+    __tablename__ = "role_permission_link"
+    role_id: int | None = Field(default=None, foreign_key="roles.id", primary_key=True)
+    permission_id: int | None = Field(
         default=None, foreign_key="permissions.id", primary_key=True
-    )
-
-
-class Role(SQLModel, table=True):
-    __tablename__ = "roles"
-
-    id: Optional[int] = Field(default=None, primary_key=True)
-    name: str
-
-    permissions: list["Permission"] = Relationship(
-        back_populates="roles", link_model=RolePermissionLink
     )
 
 
 class Permission(SQLModel, table=True):
     __tablename__ = "permissions"
 
-    id: Optional[int] = Field(default=None, primary_key=True)
-    name: str
+    id: int | None = Field(default=None, primary_key=True)
+    name: PermissionEnum = Field(unique=True)
+    label: str
+    module: str
+    description: str | None = None
 
-    roles: list[Role] = Relationship(
+    roles: list["Role"] = Relationship(
         back_populates="permissions", link_model=RolePermissionLink
     )
 
 
-class UserRoleLink(SQLModel, table=True):
-    user_id: Optional[int] = Field(
-        default=None, foreign_key="users.id", primary_key=True
+class Role(SQLModel, table=True):
+    __tablename__ = "roles"
+
+    id: int | None = Field(default=None, primary_key=True)
+    name: str = Field(unique=True)
+    is_protected: bool = Field(default=False)
+
+    permissions: list[Permission] = Relationship(
+        back_populates="roles", link_model=RolePermissionLink
     )
-    role_id: Optional[int] = Field(
-        default=None, foreign_key="roles.id", primary_key=True
-    )
+    users: list["User"] = Relationship(back_populates="role")
 
 
-class User(UserBase, table=True):
+class User(SQLModel, table=True):
     __tablename__ = "users"
 
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
+    name: str
     email: str = Field(unique=True)
-    created_at: Optional[datetime] = Field(default_factory=datetime.now, nullable=True)
-    updated_at: Optional[datetime] = Field(default_factory=datetime.now, nullable=True)
-    deleted_at: Optional[datetime] = Field(default=None, nullable=True)
+    password: str
+    phone: str | None = None
+    role_id: int | None = Field(default=None, foreign_key="roles.id")
+    created_at: datetime | None = Field(default_factory=datetime.now, nullable=True)
+    updated_at: datetime | None = Field(default_factory=datetime.now, nullable=True)
+    deleted_at: datetime | None = Field(default=None, nullable=True)
 
-    roles: list[Role] = Relationship(link_model=UserRoleLink)
-    # An user can register multiples hour
+    role: Role | None = Relationship(back_populates="users")
     hours: list["Hour"] = Relationship(back_populates="user")
-    # An user can be responsable of multiples visits
-    responsible_visits: list["Visit"] = Relationship(back_populates="responsible")
-    # An user can participate on multiple visits
-    visits: list["Visit"] = Relationship(
-        back_populates="users", link_model=UserVisitLink
+    scheduled_visits: list["Visit"] = Relationship(back_populates="responsible")
+    attended_visits: list["Visit"] = Relationship(
+        back_populates="assignees", link_model=UserVisitLink
     )

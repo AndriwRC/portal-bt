@@ -1,18 +1,33 @@
-from __future__ import annotations
-from typing import Optional, TYPE_CHECKING
+from enum import Enum
+from typing import Optional
 from sqlmodel import Field, Relationship, SQLModel
 
 
-if TYPE_CHECKING:
-    from ..hours import Hour
+class ParameterType(str, Enum):
+    TEXT = "text"
+    BOOLEAN = "boolean"
+    INTEGER = "integer"
+    DECIMAL = "decimal"
+    JSON = "json"
+    SELECT = "select"
 
 
 class Parameter(SQLModel, table=True):
     __tablename__ = "parameters"
 
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
+
+    # Unique internal reference
+    key: str = Field(index=True, unique=True)
+
+    # Human-readable reference
+    name: str
     description: str
-    ref: str
+
+    type: ParameterType = Field(default=ParameterType.TEXT)
+    editable: bool = Field(default=True)
+    default_value: str | None = None
+    values: list["ParameterValue"] = Relationship(back_populates="parameter")
 
     # I dude on this
     parameterValues: list["ParameterValue"] = Relationship(back_populates="parameter")
@@ -21,11 +36,10 @@ class Parameter(SQLModel, table=True):
 class ParameterValue(SQLModel, table=True):
     __tablename__ = "parameter_values"
 
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
     value: str
-    parameter_id: Optional[int] = Field(default=None, foreign_key="parameters.id")
+    parameter_id: int | None = Field(
+        default=None, foreign_key="parameters.id", index=True
+    )
 
-    #
-    parameter: Optional["Parameter"] = Relationship(back_populates="parameterValues")
-    # Multuple hours can have the same parameter value
-    hours: list["Hour"] = Relationship(back_populates="activity_type")
+    parameter: Optional["Parameter"] = Relationship(back_populates="values")

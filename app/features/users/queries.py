@@ -1,4 +1,4 @@
-from sqlmodel import Session
+from sqlmodel import select
 
 from app.core.queries.base import (
     BaseQuery,
@@ -16,5 +16,9 @@ class UserQueries(
     UpdateQueryMixin[User],
     DeleteQueryMixin[User],
 ):
-    def __init__(self, db: Session):
-        super().__init__(db, User)
+    model = User
+
+    def get_by_email(self, email: str):
+        statement = select(self.model).where(self.model.email == email)
+
+        return self.db.exec(statement).first()
