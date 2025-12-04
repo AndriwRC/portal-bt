@@ -27,8 +27,8 @@ class Hour(SQLModel, table=True):
     time_in: time
     time_out: time
     evidence: str | None = Field(default=None, description="file path")
-    activity_type: ActivityType = Field(default=ActivityType.VISIT)
-    state: HourState = Field(default=HourState.PENDING)
+    activity_type: ActivityType | None = Field(default=ActivityType.VISIT)
+    state: HourState | None = Field(default=HourState.PENDING)
     user_id: int | None = Field(default=None, foreign_key="users.id")
 
     user: Optional["User"] = Relationship(back_populates="hours")

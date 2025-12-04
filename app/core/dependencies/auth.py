@@ -15,8 +15,8 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
 def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: SessionDep):
     try:
-        username = decode_access_token(token)
-        if username is None:
+        user_id = decode_access_token(token)
+        if user_id is None:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Could not validate credentials",
@@ -31,7 +31,7 @@ def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: SessionD
         )
 
     user_queries = UserQueries(db)
-    user = user_queries.get_by_id(username)
+    user = user_queries.get_by_id(user_id)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
