@@ -1,7 +1,7 @@
 from sqlmodel import select, Session
 
-from app.features.users.models import Permission, Role
-from app.features.users.permissions import PERMISSION_METADATA
+from app.features.auth.models import Permission, Role
+from app.features.auth.permissions import PERMISSION_METADATA
 
 
 def sync_permissions(db: Session):
