@@ -1,4 +1,4 @@
-from fastapi import status
+from fastapi import HTTPException, status
 
 from app.core.schemas.http import HTTPResponseModel
 from app.core.services.base import BaseService, CreateServiceMixin
@@ -22,5 +22,12 @@ class HourService(BaseService[Hour, HourQueries], CreateServiceMixin[Hour]):
         )
 
     def create(self, data: HourCreate, user_id: int):
+
+        if data.total % 1 != 0:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Partial hours are not allowed.",
+            )
+
         data.user_id = user_id
         return super().create(data)
