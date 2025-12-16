@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 from sqlmodel import Field, Relationship, SQLModel
+from pydantic import EmailStr
 
 
 if TYPE_CHECKING:
@@ -14,5 +15,6 @@ class School(SQLModel, table=True):
     phone: str
     address: str
     in_charge: str
+    email: EmailStr
 
     visits: list["Visit"] = Relationship(back_populates="school")
