@@ -15,6 +15,6 @@ class School(SQLModel, table=True):
     phone: str
     address: str
     in_charge: str
-    email: EmailStr
+    email: EmailStr = Field(unique=True)
 
     visits: list["Visit"] = Relationship(back_populates="school")
