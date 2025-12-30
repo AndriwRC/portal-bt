@@ -31,10 +31,10 @@ class Visit(SQLModel, table=True):
     time_start: time
     time_end: time
 
-    status: VisitStatus = Field(default=VisitStatus.PENDING)
+    status: VisitStatus = Field(default=VisitStatus.SCHEDULED)
     has_pc: bool = Field(default=False)
     has_videobeam: bool = Field(default=False)
-    students_number: int | None = Field(default=None)
+    students_number: int 
     observations: str | None = Field(default=None)
 
     created_at: datetime | None = Field(default_factory=datetime.now, nullable=True)
