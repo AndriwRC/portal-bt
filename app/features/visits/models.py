@@ -9,7 +9,6 @@ if TYPE_CHECKING:
 
 
 class VisitStatus(str, Enum):
-    PENDING = "PENDING"
     SCHEDULED = "SCHEDULED"
     COMPLETED = "COMPLETED"
     CANCELLED = "CANCELLED"
