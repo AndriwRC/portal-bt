@@ -1,8 +1,8 @@
 """init db
 
-Revision ID: a3256497573d
-Revises:
-Create Date: 2025-12-05 18:35:06.370488
+Revision ID: 26ff740ab8f7
+Revises: 
+Create Date: 2026-01-06 21:46:45.617669
 
 """
 from typing import Sequence, Union
@@ -13,7 +13,7 @@ import sqlmodel
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'a3256497573d'
+revision: str = '26ff740ab8f7'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -27,7 +27,7 @@ def upgrade() -> None:
     sa.Column('key', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('name', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('description', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.Column('type', sa.Enum('TEXT', 'BOOLEAN', 'INTEGER', 'DECIMAL', 'JSON', 'SELECT', name='parametertype'), nullable=False),
+    sa.Column('value_type', sa.String(), nullable=False),
     sa.Column('editable', sa.Boolean(), nullable=False),
     sa.Column('default_value', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
     sa.PrimaryKeyConstraint('id')
@@ -35,7 +35,7 @@ def upgrade() -> None:
     op.create_index(op.f('ix_parameters_key'), 'parameters', ['key'], unique=True)
     op.create_table('permissions',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.Enum('USER_VIEW', 'ROLE_MANAGE', name='permissionenum'), nullable=False),
+    sa.Column('name', sa.String(), nullable=False),
     sa.Column('label', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('module', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('description', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
@@ -92,8 +92,8 @@ def upgrade() -> None:
     sa.Column('time_in', sa.Time(), nullable=False),
     sa.Column('time_out', sa.Time(), nullable=False),
     sa.Column('evidence', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
-    sa.Column('activity_type', sa.Enum('VISIT', 'ADMINISTRATIVE', 'MEETING', name='activitytype'), nullable=True),
-    sa.Column('state', sa.Enum('PENDING', 'APPROVED', name='hourstate'), nullable=True),
+    sa.Column('activity_type', sa.String(), nullable=False),
+    sa.Column('state', sa.String(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
