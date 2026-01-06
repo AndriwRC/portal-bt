@@ -4,6 +4,7 @@ from enum import Enum
 class PermissionEnum(str, Enum):
     USER_VIEW = "user.view"
     ROLE_MANAGE = "role.manage"
+    HOUR_MANAGE = "hour.manage"
 
 
 PERMISSION_METADATA = {
@@ -16,5 +17,10 @@ PERMISSION_METADATA = {
         "label": "Administrar roles",
         "module": "Roles",
         "description": "Crear, asignar, editar y eliminar roles.",
+    },
+    PermissionEnum.HOUR_MANAGE: {
+        "label": "Administrar horas",
+        "module": "Horas",
+        "description": "Aprobar o rechazar horas.",
     }
 }

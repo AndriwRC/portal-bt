@@ -1,3 +1,4 @@
+from sqlalchemy import Column, String
 from sqlmodel import Field, Relationship, SQLModel
 from typing import TYPE_CHECKING
 
@@ -19,7 +20,7 @@ class Permission(SQLModel, table=True):
     __tablename__ = "permissions"
 
     id: int | None = Field(default=None, primary_key=True)
-    name: PermissionEnum = Field(unique=True)
+    name: PermissionEnum = Field(sa_column=Column(String, unique=True, nullable=False))
     label: str
     module: str
     description: str | None = None

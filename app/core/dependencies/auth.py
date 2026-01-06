@@ -57,7 +57,7 @@ def check_permissions(*required_permissions: PermissionEnum):
         user_permissions = {permission.name for permission in user.role.permissions}
 
         for permission in required_permissions:
-            if permission not in user_permissions:
+            if permission.value not in user_permissions:
                 raise HTTPException(
                     status_code=status.HTTP_403_FORBIDDEN,
                     detail="You do not have permission to perform this action",

@@ -63,3 +63,9 @@ class CreateServiceMixin(Generic[CreateModelType]):
                     ctx=str(ex.args),
                 ),
             )
+
+        except Exception as ex:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=str(ex)
+            )

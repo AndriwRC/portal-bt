@@ -1,5 +1,6 @@
 from enum import Enum
 from typing import Optional
+from sqlalchemy import Column, String
 from sqlmodel import Field, Relationship, SQLModel
 
 
@@ -24,7 +25,9 @@ class Parameter(SQLModel, table=True):
     name: str
     description: str
 
-    type: ParameterType = Field(default=ParameterType.TEXT)
+    value_type: ParameterType = Field(
+        sa_column=Column(String, nullable=False, default=ParameterType.TEXT)
+    )
     editable: bool = Field(default=True)
     default_value: str | None = None
     values: list["ParameterValue"] = Relationship(back_populates="parameter")
