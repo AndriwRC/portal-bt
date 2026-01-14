@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Depends, Response
 from typing import Annotated
 
+from app.core.dependencies.auth import check_permissions
 from app.core.dependencies.db import SessionDep
 from app.core.schemas.http import HTTPResponseModel
+from app.features.auth.permissions import PermissionEnum
 
 from .schemas import UserCreate, UserRead, UserReadDetailed, UserReadMin, UserUpdate
 from .services import UserService
@@ -17,7 +19,11 @@ ServiceDep = Annotated[UserService, Depends(get_user_service)]
 router = APIRouter(prefix="/users", tags=["users"])
 
 
-@router.get("/", response_model=HTTPResponseModel[list[UserRead]])
+@router.get(
+    "/",
+    response_model=HTTPResponseModel[list[UserRead]],
+    dependencies=[Depends(check_permissions(PermissionEnum.USER_VIEW))],
+)
 def get_users(response: Response, service: ServiceDep):
     result = service.get_all()
     response.status_code = result.status_code
@@ -25,7 +31,11 @@ def get_users(response: Response, service: ServiceDep):
     return result
 
 
-@router.get("/{user_id}", response_model=HTTPResponseModel[UserReadDetailed])
+@router.get(
+    "/{user_id}",
+    response_model=HTTPResponseModel[UserReadDetailed],
+    dependencies=[Depends(check_permissions(PermissionEnum.USER_VIEW))],
+)
 def get_user(user_id: int, response: Response, service: ServiceDep):
     result = service.get_by_id(user_id)
     response.status_code = result.status_code

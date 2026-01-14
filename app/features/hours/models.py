@@ -1,6 +1,7 @@
 from datetime import date, time
 from enum import Enum
 from typing import TYPE_CHECKING, Optional
+from sqlalchemy import Column, String
 from sqlmodel import Field, Relationship, SQLModel
 
 
@@ -9,14 +10,14 @@ if TYPE_CHECKING:
 
 
 class HourState(str, Enum):
-    PENDING = "pendiente"
-    APPROVED = "aprobada"
+    PENDING = "pending"
+    APPROVED = "approved"
 
 
 class ActivityType(str, Enum):
-    VISIT = "visita"
-    ADMINISTRATIVE = "trabajo administrativo"
-    MEETING = "reunión"
+    VISIT = "visit"
+    ADMINISTRATIVE = "administrative"
+    MEETING = "meeting"
 
 
 class Hour(SQLModel, table=True):
@@ -27,8 +28,12 @@ class Hour(SQLModel, table=True):
     time_in: time
     time_out: time
     evidence: str | None = Field(default=None, description="file path")
-    activity_type: ActivityType = Field(default=ActivityType.VISIT)
-    state: HourState = Field(default=HourState.PENDING)
+    activity_type: ActivityType | None = Field(
+        sa_column=Column(String, nullable=False, default=ActivityType.VISIT)
+    )
+    state: HourState | None = Field(
+        sa_column=Column(String, nullable=False, default=HourState.PENDING)
+    )
     user_id: int | None = Field(default=None, foreign_key="users.id")
 
     user: Optional["User"] = Relationship(back_populates="hours")
