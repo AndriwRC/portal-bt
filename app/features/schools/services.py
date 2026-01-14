@@ -7,6 +7,7 @@ from app.core.schemas.http import HTTPResponseModel, error_detail
 from .models import School
 from .queries import SchoolQueries
 from .schemas import SchoolCreate, SchoolUpdate
+from sqlalchemy.exc import IntegrityError
 
 
 class SchoolService(
@@ -27,7 +28,17 @@ class SchoolService(
             )
 
         new_data = data.model_dump(exclude_unset=True)
-        updated = self.queries.update(record, new_data)
+        try:
+            updated = self.queries.update(record, new_data)
+
+        except IntegrityError as e:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail=error_detail(
+                    msg=CRUDMessages.UPDATE_FAILED,
+                    ctx=CRUDMessages.CONFLICT_EMAIL,
+                ),
+            )
 
         return HTTPResponseModel(
             status_code=status.HTTP_200_OK,

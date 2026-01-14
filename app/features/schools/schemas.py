@@ -1,5 +1,5 @@
 from typing import Optional
-from pydantic import EmailStr
+from pydantic import EmailStr, field_validator
 from sqlmodel import SQLModel
 
 
@@ -7,6 +7,10 @@ class SchoolBase(SQLModel):
     name: str
     address: str
     email: EmailStr
+
+    @field_validator("email")
+    def email_to_lowercase(cls, v: str) -> str:
+        return v.lower()
 
 
 class SchoolCreate(SchoolBase):
