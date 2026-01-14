@@ -16,6 +16,7 @@ class BaseService(Generic[ModelType, QueryType]):
     query_class: Type[QueryType]
 
     def __init__(self, db: Session):
+        self.db = db
         self.queries = self.query_class(db)
 
     def get_all(self) -> HTTPResponseModel:
