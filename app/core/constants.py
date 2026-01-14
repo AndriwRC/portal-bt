@@ -18,3 +18,7 @@ class CRUDMessages:
     # Delete
     DELETE_SUCCESS = "Record deleted successfully"
     DELETE_FAILED = "Failed to delete record"
+
+    # Conflicts
+    CONFLICT_SCHEDULE = "There is an existing visit for this school during the selected schedule"
+    CONFLICT_EMAIL = "The email address is already registered."
