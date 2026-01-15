@@ -1,5 +1,6 @@
 from datetime import date, time, datetime
 from typing import TYPE_CHECKING, Optional
+from sqlalchemy import Column, String
 from sqlmodel import Field, Relationship, SQLModel
 from enum import Enum
 
@@ -9,9 +10,9 @@ if TYPE_CHECKING:
 
 
 class VisitStatus(str, Enum):
-    SCHEDULED = "SCHEDULED"
-    COMPLETED = "COMPLETED"
-    CANCELLED = "CANCELLED"
+    SCHEDULED = "scheduled"
+    COMPLETED = "completed"
+    CANCELLED = "cancelled"
 
 
 class UserVisitLink(SQLModel, table=True):
@@ -31,10 +32,12 @@ class Visit(SQLModel, table=True):
     time_start: time
     time_end: time
 
-    status: VisitStatus = Field(default=VisitStatus.SCHEDULED)
+    status: VisitStatus = Field(
+        sa_column=Column(String, nullable=False, default=VisitStatus.SCHEDULED)
+    )
     has_pc: bool = Field(default=False)
     has_videobeam: bool = Field(default=False)
-    students_number: int 
+    students_number: int
     observations: str | None = Field(default=None)
 
     created_at: datetime | None = Field(default_factory=datetime.now, nullable=True)
