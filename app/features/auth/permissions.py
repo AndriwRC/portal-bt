@@ -5,6 +5,7 @@ class PermissionEnum(str, Enum):
     USER_VIEW = "user.view"
     ROLE_MANAGE = "role.manage"
     HOUR_MANAGE = "hour.manage"
+    SCHOOL_MANAGE = "school.delete"
 
 
 PERMISSION_METADATA = {
@@ -22,5 +23,11 @@ PERMISSION_METADATA = {
         "label": "Administrar horas",
         "module": "Horas",
         "description": "Aprobar o rechazar horas.",
+    },
+    PermissionEnum.SCHOOL_MANAGE: {
+        "label":"Eliminar colegios",
+        "module": "Schools",
+        "description": "Eliminar los colegios registrados en la plataforma",
     }
+
 }
