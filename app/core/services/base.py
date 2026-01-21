@@ -16,6 +16,7 @@ class BaseService(Generic[ModelType, QueryType]):
     query_class: Type[QueryType]
 
     def __init__(self, db: Session):
+        self.db = db
         self.queries = self.query_class(db)
 
     def get_all(self) -> HTTPResponseModel:
@@ -62,4 +63,10 @@ class CreateServiceMixin(Generic[CreateModelType]):
                     msg=CRUDMessages.CREATE_FAILED,
                     ctx=str(ex.args),
                 ),
+            )
+
+        except Exception as ex:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=str(ex)
             )

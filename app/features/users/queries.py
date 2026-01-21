@@ -22,3 +22,7 @@ class UserQueries(
         statement = select(self.model).where(self.model.email == email)
 
         return self.db.exec(statement).first()
+
+    def get_by_ids(self, ids: list[int]):
+        statement = select(self.model).where(self.model.id.in_(ids))
+        return self.db.exec(statement).all()

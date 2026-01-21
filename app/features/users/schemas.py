@@ -1,6 +1,8 @@
-from typing import Optional
 from pydantic import EmailStr
 from sqlmodel import SQLModel
+from typing import Optional
+
+from ..auth.schemas import RoleBase, RoleDetailed
 
 
 class UserBase(SQLModel):
@@ -32,18 +34,3 @@ class UserReadMin(UserBase):
 class UserReadDetailed(UserRead):
     phone: str | None = None
     role: Optional["RoleDetailed"] = None
-
-
-class RoleBase(SQLModel):
-    name: str
-
-
-class RoleDetailed(RoleBase):
-    permissions: list["PermissionBase"] = []
-
-
-class PermissionBase(SQLModel):
-    name: str
-    label: str
-    module: str
-    description: str | None = None
