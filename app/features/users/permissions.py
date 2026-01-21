@@ -2,19 +2,32 @@ from enum import Enum
 
 
 class PermissionEnum(str, Enum):
-    MANAGE_STOREROOM = "manage_storeroom"
-    HANDLE_HOURS = "handle_hours"
+    USER_VIEW = "user.view"
+    ROLE_MANAGE = "role.manage"
+    HOUR_MANAGE = "hour.manage"
+    SCHOOL_MANAGE = "school.delete"
 
 
 PERMISSION_METADATA = {
-    PermissionEnum.MANAGE_STOREROOM: {
-        "label": "Administrar Bodega",
-        "module": "Bodega",
-        "description": "Ingresar y recibir elementos de bodega.",
+    PermissionEnum.USER_VIEW: {
+        "label": "Ver usuarios",
+        "module": "Usuarios",
+        "description": "Listar los usuarios registrados en la plataforma."
     },
-    PermissionEnum.HANDLE_HOURS: {
-        "label": "Gestionar Horas",
+    PermissionEnum.ROLE_MANAGE: {
+        "label": "Administrar roles",
+        "module": "Roles",
+        "description": "Crear, asignar, editar y eliminar roles.",
+    },
+    PermissionEnum.HOUR_MANAGE: {
+        "label": "Administrar horas",
         "module": "Horas",
-        "description": "Aprobar y rechazar horas ingresadas por los becados.",
+        "description": "Aprobar o rechazar horas.",
     },
+    PermissionEnum.SCHOOL_MANAGE: {
+        "label":"Eliminar colegios",
+        "module": "Schools",
+        "description": "Eliminar los colegios registrados en la plataforma",
+    }
+
 }
