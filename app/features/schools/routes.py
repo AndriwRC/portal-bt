@@ -1,10 +1,19 @@
 from fastapi import APIRouter, Depends, Response
 from typing import Annotated
 
+from app.core.dependencies.auth import check_permissions
 from app.core.dependencies.db import SessionDep
 from app.core.schemas.http import HTTPResponseModel
+from app.features.auth.permissions import PermissionEnum
+from app.core.dependencies.auth import AuthDep
 
-from .schemas import SchoolCreate, SchoolRead, SchoolReadDetailed, SchoolReadMin, SchoolUpdate
+from .schemas import (
+    SchoolCreate,
+    SchoolRead,
+    SchoolReadDetailed,
+    SchoolReadMin,
+    SchoolUpdate,
+)
 from .services import SchoolService
 
 
@@ -34,7 +43,9 @@ def get_school(school_id: int, response: Response, service: ServiceDep):
 
 
 @router.post("/", response_model=HTTPResponseModel[SchoolReadDetailed])
-def create_school(school: SchoolCreate, response: Response, service: ServiceDep):
+def create_school(
+    school: SchoolCreate, response: Response, service: ServiceDep, current_user: AuthDep
+):
     result = service.create(school)
     response.status_code = result.status_code
 
@@ -43,7 +54,11 @@ def create_school(school: SchoolCreate, response: Response, service: ServiceDep)
 
 @router.patch("/{school_id}", response_model=HTTPResponseModel[SchoolReadDetailed])
 def update_school(
-    school_id: int, data: SchoolUpdate, response: Response, service: ServiceDep
+    school_id: int,
+    data: SchoolUpdate,
+    response: Response,
+    service: ServiceDep,
+    current_user: AuthDep,
 ):
     result = service.update(school_id, data)
     response.status_code = result.status_code
@@ -51,8 +66,12 @@ def update_school(
     return result
 
 
-@router.delete("/{school_id}", response_model=HTTPResponseModel[SchoolReadMin])
-def delete_school(school_id:int, response: Response, service: ServiceDep):
+@router.delete(
+    "/{school_id}",
+    response_model=HTTPResponseModel[SchoolReadMin],
+    dependencies=[Depends(check_permissions(PermissionEnum.SCHOOL_MANAGE))],
+)
+def delete_school(school_id: int, response: Response, service: ServiceDep):
     result = service.delete(school_id)
     response.status_code = result.status_code
 
