@@ -59,7 +59,7 @@ def update_visit(
     return result
 
 
-@router.delete("/{visit_id}", response_model=HTTPResponseModel[VisitRead])
+@router.delete("/{visit_id}", response_model=HTTPResponseModel[VisitReadMin])
 def delete_visit(visit_id: int, response: Response, service: ServiceDep):
     result = service.delete(visit_id)
     response.status_code = result.status_code
