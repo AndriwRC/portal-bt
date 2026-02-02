@@ -2,7 +2,7 @@ from enum import Enum
 
 
 class PermissionEnum(str, Enum):
-    USER_VIEW = "user.view"
+    USER_VIEW = "user.manage"
     ROLE_MANAGE = "role.manage"
     HOUR_MANAGE = "hour.manage"
     SCHOOL_MANAGE = "school.manage"
@@ -10,9 +10,9 @@ class PermissionEnum(str, Enum):
 
 PERMISSION_METADATA = {
     PermissionEnum.USER_VIEW: {
-        "label": "Ver usuarios",
+        "label": "Administrar usuarios",
         "module": "Usuarios",
-        "description": "Listar los usuarios registrados en la plataforma.",
+        "description": "Crear, editar, actualizar y eliminar los usuarios registrados en la plataforma.",
     },
     PermissionEnum.ROLE_MANAGE: {
         "label": "Administrar roles",
