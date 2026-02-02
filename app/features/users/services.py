@@ -16,6 +16,17 @@ class UserService(BaseService[User, UserQueries], CreateServiceMixin[UserCreate]
 
     def create(self, data: UserCreate):
         data.password = get_password_hash(data.password)
+
+        user_record = self.queries.get_by_email(data.email)
+
+        if user_record:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=error_detail(
+                    msg=CRUDMessages.CREATE_FAILED, ctx=CRUDMessages.CONFLICT_EMAIL
+                ),
+            )
+
         return super().create(data)
 
     def update(self, id: int, data: UserUpdate):
@@ -51,10 +62,10 @@ class UserService(BaseService[User, UserQueries], CreateServiceMixin[UserCreate]
                 ),
             )
 
-        deleted = self.queries.delete(record)
+        self.queries.delete(record)
 
         return HTTPResponseModel(
             status_code=status.HTTP_200_OK,
             message=CRUDMessages.DELETE_SUCCESS,
-            data=deleted,
+            data=record,
         )
