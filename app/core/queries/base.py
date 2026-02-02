@@ -1,6 +1,6 @@
 from sqlmodel import Session, select
 from typing import Type, Generic
-
+from datetime import datetime
 from ..types import ModelType
 
 
@@ -11,11 +11,12 @@ class BaseQuery(Generic[ModelType]):
         self.db = db
 
     def get_all(self) -> list[ModelType]:
-        statement = select(self.model)
+        statement = select(self.model).where(self.model.deleted_at == None)
         return self.db.exec(statement).all()
 
     def get_by_id(self, id: int) -> ModelType | None:
-        return self.db.get(self.model, id)
+        statement = select(self.model).where(self.model.id == id, self.model.deleted_at == None)
+        return self.db.exec(statement).first()
 
 
 class CreateQueryMixin(Generic[ModelType]):
