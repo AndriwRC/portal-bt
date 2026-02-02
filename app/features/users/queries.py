@@ -1,4 +1,5 @@
 from sqlmodel import select
+from datetime import datetime
 
 from app.core.queries.base import (
     BaseQuery,
@@ -6,6 +7,7 @@ from app.core.queries.base import (
     UpdateQueryMixin,
     DeleteQueryMixin,
 )
+from app.core.types import ModelType
 
 from .models import User
 
@@ -26,3 +28,11 @@ class UserQueries(
     def get_by_ids(self, ids: list[int]):
         statement = select(self.model).where(self.model.id.in_(ids))
         return self.db.exec(statement).all()
+
+    def delete(self, record: ModelType) -> ModelType:
+        record.deleted_at = datetime.now()
+        self.db.add(record)
+        self.db.commit()
+        self.db.refresh(record)
+
+        return record
