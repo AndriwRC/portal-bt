@@ -2,7 +2,7 @@ from enum import Enum
 
 
 class PermissionEnum(str, Enum):
-    USER_VIEW = "user.manage"
+    USER_MANAGE = "user.manage"
     ROLE_MANAGE = "role.manage"
     HOUR_MANAGE = "hour.manage"
     SCHOOL_MANAGE = "school.manage"
